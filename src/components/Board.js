@@ -17,23 +17,28 @@ const Row = styled.div `
 `
 
 const Wrapper = styled.div `
-  border-width: ${props => props.borderWidth || 2}px;
-  border-style: solid;
-  border-color: grey;
+  // border-width: ${props => props.borderWidth || 2}px;
+  // border-style: solid;
+  // border-color: grey;
 `
 
-const renderBoard = boardState => {
+const renderBoard = (boardState, handleClick) => {
+  if (Object.keys(boardState).length === 0) {
+    return <div></div>
+  }
+
   return (
     boardState.map((row, i) => {
       return (
         <Row borderWidth={borderWidth} key={i}>
-          {row.map((col, i) => {
+          {row.map((col, j) => {
             return (
               <Block
-                key={i}
+                key={j}
                 isClicked={col}
                 size={50}
                 borderWidth={borderWidth}
+                onClick={() => handleClick({ y: i, x: j })}
               />
             )
           })}
@@ -46,7 +51,7 @@ const renderBoard = boardState => {
 export default props => {
   return (
     <Wrapper borderWidth={borderWidth}>
-      {renderBoard(props.boardState)}
+      {renderBoard(props.boardState, props.handleClick)}
     </Wrapper>
   )
 }

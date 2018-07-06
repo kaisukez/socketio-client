@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux';
-// import UpdateItemList from './reducer_update_item_list';
-// import ArrowStateChange from './reducer_arrow_state_change';
-// import ModeChange from './reducer_mode_change';
+
+import UpdateSocket from './reducer_update_socket';
+import UpdateBoardState from './reducer_update_board_state';
 
 const rootReducer = combineReducers({
-  // itemList: 'haha'
-  // arrowState: ArrowStateChange,
-  // mode: ModeChange,
+  socket: UpdateSocket,
+  boardState: UpdateBoardState
 });
 
 export default rootReducer;
