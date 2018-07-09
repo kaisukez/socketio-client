@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { initializeBoardState, initializeSocket, cellClicked } from './actions';
 
+import Navigator from './components/Navigator';
 import Board from './components/Board';
+
+const AppWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 20% 80%;
+`
 
 class App extends Component {
   constructor(props) {
@@ -21,12 +28,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <AppWrapper className="App">
+        <Navigator />
         <Board
           boardState={this.props.boardState}
           handleClick={this.props.cellClicked}
         />
-      </div>
+      </AppWrapper>
     );
   }
 }

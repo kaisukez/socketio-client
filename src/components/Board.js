@@ -20,6 +20,7 @@ const Wrapper = styled.div `
   // border-width: ${props => props.borderWidth || 2}px;
   // border-style: solid;
   // border-color: grey;
+  grid-column: col1-start / col1-end;
 `
 
 const renderBoard = (boardState, handleClick) => {
