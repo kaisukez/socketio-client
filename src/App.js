@@ -10,7 +10,7 @@ import Board from './components/Board';
 class App extends Component {
   constructor(props) {
     super(props);
-    const boardState = Array(8).fill(Array(8).fill(false));
+    const boardState = Array(8).fill('').map(a => Array(8).fill(false));
     this.props.initializeBoardState(boardState);
   }
 

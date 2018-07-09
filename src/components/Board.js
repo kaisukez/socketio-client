@@ -38,7 +38,7 @@ const renderBoard = (boardState, handleClick) => {
                 isClicked={col}
                 size={50}
                 borderWidth={borderWidth}
-                onClick={() => handleClick({ y: i, x: j })}
+                onClick={ () => handleClick({ y: i, x: j }) }
               />
             )
           })}
