@@ -1,18 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import './index.css';
 import reducers from './reducers';
+
+import HomePage from './containers/HomePage';
+import PlayPage from './containers/PlayPage';
+import ProfilePage from './containers/ProfilePage';
+import SettingPage from './containers/SettingPage';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-    <App />
+    <BrowserRouter>
+      <Switch>
+        <Route path="/home" component={HomePage} />
+        <Route path="/play" component={PlayPage} />
+        <Route path="/profile" component={ProfilePage} />
+        <Route path="/setting" component={SettingPage} />
+        <Route path="/" component={PlayPage} />
+      </Switch>
+    </BrowserRouter>
   </Provider>
   , document.getElementById('root')
 );

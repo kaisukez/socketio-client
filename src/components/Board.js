@@ -1,15 +1,21 @@
-import React from 'react';
-import styled from 'styled-components'
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
+const cellSize = 60;
 const borderWidth = 2;
 
 const Block = styled.div `
-  width: ${props => props.size || 30}px;
-  height: ${props => props.size || 30}px;
-  background-color: ${props => props.isClicked ? 'lightblue' : 'lightgrey'};
-  border-width: ${props => props.borderWidth || 2}px;
-  border-style: solid;
-  border-color: grey;
+  // width: ${ cellSize }px;
+  // height: ${ cellSize }px;
+  border: ${ borderWidth }px solid grey;
+  background-color: ${ props => props.isClicked ? 'lightblue' : 'lightgrey' };
+
+  width: 11vh;
+  &:after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
 `
 
 const Row = styled.div `
@@ -17,42 +23,45 @@ const Row = styled.div `
 `
 
 const Wrapper = styled.div `
-  // border-width: ${props => props.borderWidth || 2}px;
-  // border-style: solid;
-  // border-color: grey;
-  grid-column: col1-start / col1-end;
+  // width: ${ cellSize * 8 + borderWidth }px;
+  // height: ${ cellSize * 8 + borderWidth }px;
+  // border: 1px solid grey;
 `
 
-const renderBoard = (boardState, handleClick) => {
-  if (Object.keys(boardState).length === 0) {
-    return <div></div>
-  }
 
-  return (
-    boardState.map((row, i) => {
-      return (
-        <Row borderWidth={borderWidth} key={i}>
+class Board extends Component {
+  renderBoard = (boardState, handleClick) => {
+    if (Object.keys(boardState).length === 0) {
+      return <div></div>
+    }
+
+    return (
+      boardState.map((row, i) => {
+        return (
+          <Row key={i}>
           {row.map((col, j) => {
             return (
               <Block
-                key={j}
-                isClicked={col}
-                size={50}
-                borderWidth={borderWidth}
-                onClick={ () => handleClick({ y: i, x: j }) }
+              key={j}
+              isClicked={col}
+              onClick={ () => handleClick({ y: i, x: j }) }
               />
             )
           })}
-        </Row>
-      )
-    })
-  )
+          </Row>
+        )
+      })
+    )
+  }
+
+  render() {
+    return (
+      <Wrapper>
+        { this.renderBoard(this.props.boardState, this.props.handleClick) }
+        <button onClick={ () => this.props.goToLobby() }>back to lobby</button>
+      </Wrapper>
+    )
+  }
 }
 
-export default props => {
-  return (
-    <Wrapper borderWidth={borderWidth}>
-      {renderBoard(props.boardState, props.handleClick)}
-    </Wrapper>
-  )
-}
+export default Board;

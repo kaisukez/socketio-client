@@ -1,7 +1,7 @@
 import { CELL_CLICKED, INITIALIZE_BOARD_STATE } from '../actions';
 
 export default function(state={}, action) {
-  switch(action.type) {
+  switch (action.type) {
     case INITIALIZE_BOARD_STATE:
       return action.boardState;
 

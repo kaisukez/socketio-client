@@ -2,20 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 
 const NavWrapper = styled.div`
-  grid-column: first / col2-start;
-  grid-row: first / row2-start;
+  display: flex;
+  flex-direction: column;
+  background-color: lightgrey;
+  height: 100vh;
 `
 
-const navs = ['Home', 'Play', 'Profile', 'Setting']
+const NavButton = styled.button`
+  border: none;
+  outline: none;
+  color: white;
+  background-color: lightgrey;
+`
 
-const renderNavs = () => {
+const navs = ['home', 'play', 'profile', 'setting']
+
+const capitalize = str => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+const renderNavs = history => {
   return (
     navs.map((nav, i) => {
-        return (
-          <div key={i}>
-            <h2>{nav}</h2>
-          </div>
-        )
+      return (
+        <NavButton
+          key={i}
+          onClick={ () => history.push(`/${nav}`) }
+        >
+        {capitalize(nav)}
+        </NavButton>
+      )
     })
   )
 }
@@ -23,7 +39,7 @@ const renderNavs = () => {
 export default props => {
   return (
     <NavWrapper>
-      {renderNavs()}
+      {renderNavs(props.history)}
     </NavWrapper>
   )
 }
