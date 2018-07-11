@@ -9,6 +9,9 @@ import {
   cellClicked,
   goToLobby,
   goToBoard,
+  roomCreated,
+  roomDestroyed,
+  updateAllRooms,
 } from '../actions';
 
 import Navigator from '../components/Navigator';
@@ -24,12 +27,40 @@ class PlayPage extends Component {
   }
 
   componentDidMount() {
-    const socket = io.connect('http://localhost:3001');
-    this.props.initializeSocket(socket);
+    console.log('haha')
+    if (Object.keys(this.props.socket).length === 0) {
+      const socket = io.connect('http://localhost:3001');
+      this.props.initializeSocket(socket);
+      this.listenToRoomCreated(socket, this.props.roomCreated);
+      this.listenToRoomDestroyed(socket, this.props.roomDestroyed);
+      this.listenToResRooms(socket, this.props.updateAllRooms);
+      socket.emit('reqRooms')
+    }
+  }
+
+  listenToRoomCreated = socket => {
+    socket.on('roomCreated', ({ roomName }) => {
+      this.props.roomCreated(roomName);
+      console.log('room created', roomName)
+    });
+  }
+
+  listenToRoomDestroyed = socket => {
+    socket.on('roomDestroyed', ({ roomName }) => {
+      this.props.roomDestroyed(roomName);
+      console.log('room destroyed', roomName)
+    });
+  }
+
+  listenToResRooms = socket => {
+    socket.on('resRooms', ({ rooms }) => {
+      this.props.updateAllRooms(rooms);
+      console.log('res rooms', rooms)
+    });
   }
 
   createRoom = () => {
-    this.props.state.socket.emit('createRoom')
+    this.props.socket.emit('createRoom')
   }
 
   renderPlayPage() {
@@ -67,7 +98,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    initializeBoardState, initializeSocket, cellClicked, goToLobby, goToBoard
+    initializeBoardState,
+    initializeSocket,
+    cellClicked,
+    goToLobby,
+    goToBoard,
+    roomCreated,
+    roomDestroyed,
+    updateAllRooms,
   }, dispatch)
 }
 
