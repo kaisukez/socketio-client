@@ -1,47 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import styled from 'styled-components';
 
-class Lobby extends Component {
-  renderRoomLists = rooms => {
-    return (
-      rooms.map((room, i) => {
-        return (
-          <li key={i}>{room}</li>
-        )
-      })
-    )
-  }
-
-  renderRooms = () => {
-    return (
-      <div>
-        <h2>rooms</h2>
-        {this.renderRoomLists(this.props.rooms)}
-      </div>
-    )
-  }
-
-  createRoom = () => {
-    this.props.socket.emit('createRoom')
-  }
-
-  render() {
-    return (
-      <div>
-      <button>Quick Start</button>
-      <button onClick={ () => this.createRoom() }>Create Room</button>
-      <button onClick={ () => this.props.goToBoard() }>go to board</button>
-      {this.renderRooms()}
-      </div>
-    )
-  }
+const renderRooms = rooms => {
+  return (
+    <ul>
+      {rooms.map((room, i) => {
+        <li key={i}>{room}</li>
+      })}
+    </ul>
+  )
 }
 
-function mapStateToProps(state) {
-  return {
-    socket: state.socket,
-    rooms: state.rooms,
-  }
+const Lobby = props => {
+  return (
+    <div>
+      <button onClick={ () => props.goToBoard() }>go to board</button>
+      { renderRooms(props.rooms) }
+    </div>
+  )
 }
 
-export default connect(mapStateToProps)(Lobby);
+export default Lobby;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const cellSize = 60;
@@ -22,46 +22,33 @@ const Row = styled.div `
   display: flex;
 `
 
-const Wrapper = styled.div `
-  // width: ${ cellSize * 8 + borderWidth }px;
-  // height: ${ cellSize * 8 + borderWidth }px;
-  // border: 1px solid grey;
-`
-
-
-class Board extends Component {
-  renderBoard = (boardState, handleClick) => {
-    if (Object.keys(boardState).length === 0) {
-      return <div></div>
-    }
-
-    return (
-      boardState.map((row, i) => {
-        return (
-          <Row key={i}>
+const renderBoard = (boardState, squareClicked) => {
+  return (
+    boardState.map((row, i) => {
+      return (
+        <Row key={i}>
           {row.map((col, j) => {
             return (
               <Block
-              key={j}
-              isClicked={col}
-              onClick={ () => handleClick({ y: i, x: j }) }
+                key={j}
+                isClicked={col}
+                onClick={ () => squareClicked({ y: i, x: j }) }
               />
             )
           })}
-          </Row>
-        )
-      })
-    )
-  }
+        </Row>
+      )
+    })
+  )
+}
 
-  render() {
-    return (
-      <Wrapper>
-        { this.renderBoard(this.props.boardState, this.props.handleClick) }
-        <button onClick={ () => this.props.goToLobby() }>back to lobby</button>
-      </Wrapper>
-    )
-  }
+const Board = props => {
+  return (
+    <div>
+      { renderBoard(props.boardState, props.squareClicked) }
+      <button onClick={ () => props.goToLobby() }>back to lobby</button>
+    </div>
+  )
 }
 
 export default Board;

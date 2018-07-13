@@ -29,7 +29,7 @@ const renderNavs = history => {
           key={i}
           onClick={ () => history.push(`/${nav}`) }
         >
-        {capitalize(nav)}
+          { capitalize(nav) }
         </NavButton>
       )
     })
@@ -39,7 +39,7 @@ const renderNavs = history => {
 export default props => {
   return (
     <NavWrapper>
-      {renderNavs(props.history)}
+      { renderNavs(props.history) }
     </NavWrapper>
   )
 }

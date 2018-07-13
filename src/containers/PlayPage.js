@@ -1,112 +1,61 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import io from 'socket.io-client';
 
-import {
-  initializeBoardState,
-  initializeSocket,
-  cellClicked,
-  goToLobby,
-  goToBoard,
-  roomCreated,
-  roomDestroyed,
-  updateAllRooms,
-} from '../actions';
+import config from '../config.json';
+import { initializeSocket } from '../actions';
 
 import Navigator from '../components/Navigator';
-import Lobby from '../components/Lobby';
-import Board from '../components/Board';
+import LobbyContainer from '../containers/LobbyContainer';
+import BoardContainer from '../containers/BoardContainer';
 import Wrapper from './styles/Wrapper';
 
 class PlayPage extends Component {
   constructor(props) {
     super(props);
-    const boardState = Array(8).fill('').map(a => Array(8).fill(false));
-    this.props.initializeBoardState(boardState);
+    this.state = { page: 'lobby' }
   }
 
-  componentDidMount() {
-    console.log('haha')
+  componentWillMount() {
     if (Object.keys(this.props.socket).length === 0) {
-      const socket = io.connect('http://localhost:3001');
+      console.log('play page')
+      const socket = io.connect(`${ config.server }`);
       this.props.initializeSocket(socket);
-      this.listenToRoomCreated(socket, this.props.roomCreated);
-      this.listenToRoomDestroyed(socket, this.props.roomDestroyed);
-      this.listenToResRooms(socket, this.props.updateAllRooms);
-      socket.emit('reqRooms')
+      console.log('socket', this.props.socket)
     }
   }
 
-  listenToRoomCreated = socket => {
-    socket.on('roomCreated', ({ roomName }) => {
-      this.props.roomCreated(roomName);
-      console.log('room created', roomName)
-    });
+  goTo = nextPage => {
+    this.setState({ page: nextPage })
   }
 
-  listenToRoomDestroyed = socket => {
-    socket.on('roomDestroyed', ({ roomName }) => {
-      this.props.roomDestroyed(roomName);
-      console.log('room destroyed', roomName)
-    });
-  }
-
-  listenToResRooms = socket => {
-    socket.on('resRooms', ({ rooms }) => {
-      this.props.updateAllRooms(rooms);
-      console.log('res rooms', rooms)
-    });
-  }
-
-  createRoom = () => {
-    this.props.socket.emit('createRoom')
-  }
-
-  renderPlayPage() {
-    if (this.props.playPageStatus === "lobby")
-      return (
-        <Lobby goToBoard={this.props.goToBoard} />
-      )
-    else if (this.props.playPageStatus === "board")
-      return (
-        <Board
-          handleClick={this.props.cellClicked}
-          boardState={this.props.boardState}
-          goToLobby={this.props.goToLobby}
-        />
-      )
+  renderPlayPage = () => {
+    const props = { goTo: nextPage => this.goTo(nextPage) }
+    if (this.state.page === 'lobby')
+      return <LobbyContainer { ...props } />
+    else if (this.state.page === 'board')
+      return <BoardContainer { ...props } />
+    else
+      return null
   }
 
   render() {
     return (
       <Wrapper>
         <Navigator history={this.props.history} />
-        {this.renderPlayPage()}
+        { this.renderPlayPage() }
       </Wrapper>
     )
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    boardState: state.boardState,
-    socket: state.socket,
-    playPageStatus: state.playPageStatus
-  }
-}
+const mapStateToProps = state => ({
+  socket: state.socket
+})
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    initializeBoardState,
-    initializeSocket,
-    cellClicked,
-    goToLobby,
-    goToBoard,
-    roomCreated,
-    roomDestroyed,
-    updateAllRooms,
-  }, dispatch)
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ initializeSocket }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayPage);

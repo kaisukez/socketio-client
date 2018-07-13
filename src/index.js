@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
+import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './index.css';
+
 import reducers from './reducers';
 
 import HomePage from './containers/HomePage';
@@ -13,10 +14,10 @@ import PlayPage from './containers/PlayPage';
 import ProfilePage from './containers/ProfilePage';
 import SettingPage from './containers/SettingPage';
 
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+const store = createStore(reducers)
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
+  <Provider store={ store }>
     <BrowserRouter>
       <Switch>
         <Route path="/home" component={HomePage} />
