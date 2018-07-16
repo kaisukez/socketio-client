@@ -15,12 +15,19 @@ class BoardContainer extends Component {
     this.state = { boardState }
   }
 
-  componentWillMount() {
-    console.log('board container', this.props.socket)
-    if (Object.keys(this.props.socket).length === 0) {
-      const socket = io.connect(`${ config.server }`);
-      this.props.initializeSocket(socket);
+  componentDidUpdate(prevProps) {
+    console.log('haha')
+    if (Object.keys(prevProps.socket).length === 0
+          && Object.keys(this.props.socket).length > 0) {
+      this.listenToResRooms(this.props.socket)
+      console.log('listen res2')
     }
+  }
+
+  listenToResRooms = socket => {
+    socket.on('resRooms', ({ rooms }) => {
+      this.setState({ rooms })
+    })
   }
 
   squareClicked = position => {

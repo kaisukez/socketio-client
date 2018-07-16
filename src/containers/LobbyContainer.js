@@ -11,16 +11,30 @@ import Lobby from '../components/Lobby';
 class LobbyContainer extends Component {
   constructor(props) {
     super(props)
-    this.state = { rooms: [] }
+    this.state = {
+      rooms: [],
+      isInitialize: false
+    }
   }
 
   componentWillMount() {
-    // console.log('lobby container', this.props.socket)
-    // if (Object.keys(this.props.socket).length === 0) {
-    //   const socket = io.connect(`${ config.server }`);
-    //   this.props.initializeSocket(socket);
-    // }
-    this.listenToResRooms(this.props.socket)
+    console.log('will mount')
+  }
+
+  componentDidMount() {
+    console.log('did mount')
+  }
+
+  componentWillUnmount() {
+    console.log('unmount')
+  }
+
+  componentDidUpdate(prevProps) {
+    if (Object.keys(prevProps.socket).length === 0
+          && Object.keys(this.props.socket).length > 0) {
+      this.listenToResRooms(this.props.socket)
+      console.log('listen res')
+    }
   }
 
   listenToResRooms = socket => {

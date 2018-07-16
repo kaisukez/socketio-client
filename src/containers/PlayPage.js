@@ -19,10 +19,9 @@ class PlayPage extends Component {
 
   componentWillMount() {
     if (Object.keys(this.props.socket).length === 0) {
-      console.log('play page')
+      console.log('play page will mount')
       const socket = io.connect(`${ config.server }`);
       this.props.initializeSocket(socket);
-      console.log('socket', this.props.socket)
     }
   }
 
@@ -31,7 +30,10 @@ class PlayPage extends Component {
   }
 
   renderPlayPage = () => {
-    const props = { goTo: nextPage => this.goTo(nextPage) }
+    const props = {
+      goTo: nextPage => this.goTo(nextPage),
+      socket: this.props.socket
+    }
     if (this.state.page === 'lobby')
       return <LobbyContainer { ...props } />
     else if (this.state.page === 'board')
