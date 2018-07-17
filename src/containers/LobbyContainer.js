@@ -35,17 +35,17 @@ class LobbyContainer extends Component {
   }
 
   listenToRoomUpdate = socket => {
-    socket.on('roomUpdate', roomName => {
+    socket.on('roomUpdate', roomId => {
       const rooms = this.state.rooms.slice()
-      rooms.push(roomName)
+      rooms.push(roomId)
       this.setState({ rooms })
     })
   }
 
   listenToRoomDestroy = socket => {
-    socket.on('roomDestroy', roomName => {
+    socket.on('roomDestroy', roomId => {
       const rooms = this.state.rooms.slice()
-      rooms.splice(rooms.indexOf(roomName), 1)
+      rooms.splice(rooms.indexOf(roomId), 1)
       this.setState({ rooms })
     })
   }
@@ -58,8 +58,9 @@ class LobbyContainer extends Component {
     socket.emit('createRoom')
   }
 
-  joinRoom = (socket, roomName) => {
-    socket.emit('joinRoom', roomName)
+  joinRoom = (socket, roomId) => {
+    socket.emit('joinRoom', roomId)
+    this.setState({ page: 'board' })
   }
 
   render() {

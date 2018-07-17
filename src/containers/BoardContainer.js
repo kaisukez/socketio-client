@@ -19,13 +19,13 @@ class BoardContainer extends Component {
       this.props.initializeSocket,
       'haha'
     )
-    this.listenToUpdateBoardState(socket)
+    this.listenToUpdateWholeBoardState(socket)
     this.listenToMoved(socket)
     this.getBoardState(socket)
   }
 
-  listenToUpdateBoardState = socket => {
-    socket.on('updateWholeBoardState', ({ boardState }) => {
+  listenToUpdateWholeBoardState = socket => {
+    socket.on('updateWholeBoardState', boardState => {
       this.setState({ boardState })
     })
   }
