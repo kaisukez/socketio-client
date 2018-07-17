@@ -21,6 +21,7 @@ class LobbyContainer extends Component {
     this.listenToRoomUpdateAll(socket)
     this.listenToRoomUpdate(socket)
     this.listenToRoomDestroy(socket)
+    this.listenToRoomCreated(socket)
     this.getAllRooms(socket)
   }
 
@@ -50,6 +51,12 @@ class LobbyContainer extends Component {
     })
   }
 
+  listenToRoomCreated = socket => {
+    socket.on('roomCreated', roomId => {
+      this.joinRoom(socket, roomId)
+    })
+  }
+
   getAllRooms = socket => {
     socket.emit('getAllRooms')
   }
@@ -60,7 +67,7 @@ class LobbyContainer extends Component {
 
   joinRoom = (socket, roomId) => {
     socket.emit('joinRoom', roomId)
-    this.setState({ page: 'board' })
+    this.props.goTo('board')
   }
 
   render() {

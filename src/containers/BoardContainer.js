@@ -24,6 +24,11 @@ class BoardContainer extends Component {
     this.getBoardState(socket)
   }
 
+  componentWillUnmount() {
+    this.props.socket.emit('leaveRoom')
+    this.props.socket.removeAllListeners()
+  }
+
   listenToUpdateWholeBoardState = socket => {
     socket.on('updateWholeBoardState', boardState => {
       this.setState({ boardState })
@@ -32,19 +37,15 @@ class BoardContainer extends Component {
 
   listenToMoved = socket => {
     socket.on('moved', position => {
-      { x, y } = position
+      const { x, y } = position
       const boardState = this.state.boardState.slice()
-      boardState[y][x] !boardState[y][x]
+      boardState[y][x] = !boardState[y][x]
       this.setState({ boardState })
     })
   }
 
   getBoardState = socket => {
     socket.emit('getBoardState')
-  }
-
-  componentWillUnmount() {
-    this.props.socket.removeAllListeners()
   }
 
   squareClicked = position => {
