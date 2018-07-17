@@ -17,14 +17,6 @@ class PlayPage extends Component {
     this.state = { page: 'lobby' }
   }
 
-  componentWillMount() {
-    if (Object.keys(this.props.socket).length === 0) {
-      console.log('play page will mount')
-      const socket = io.connect(`${ config.server }`);
-      this.props.initializeSocket(socket);
-    }
-  }
-
   goTo = nextPage => {
     this.setState({ page: nextPage })
   }

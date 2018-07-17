@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
 
-import config from '../config.json';
 import { initializeSocket } from '../actions';
-
+import InitializeSocketToStore from '../helpers/InitializeSocketToStore'
 import Board from '../components/Board';
 
 class BoardContainer extends Component {
@@ -15,19 +13,38 @@ class BoardContainer extends Component {
     this.state = { boardState }
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('haha')
-    if (Object.keys(prevProps.socket).length === 0
-          && Object.keys(this.props.socket).length > 0) {
-      this.listenToResRooms(this.props.socket)
-      console.log('listen res2')
-    }
+  componentDidMount() {
+    const socket = InitializeSocketToStore(
+      this.props.socket,
+      this.props.initializeSocket,
+      'haha'
+    )
+    this.listenToUpdateBoardState(socket)
+    this.listenToMoved(socket)
+    this.getBoardState(socket)
   }
 
-  listenToResRooms = socket => {
-    socket.on('resRooms', ({ rooms }) => {
-      this.setState({ rooms })
+  listenToUpdateBoardState = socket => {
+    socket.on('updateWholeBoardState', ({ boardState }) => {
+      this.setState({ boardState })
     })
+  }
+
+  listenToMoved = socket => {
+    socket.on('moved', position => {
+      { x, y } = position
+      const boardState = this.state.boardState.slice()
+      boardState[y][x] !boardState[y][x]
+      this.setState({ boardState })
+    })
+  }
+
+  getBoardState = socket => {
+    socket.emit('getBoardState')
+  }
+
+  componentWillUnmount() {
+    this.props.socket.removeAllListeners()
   }
 
   squareClicked = position => {
